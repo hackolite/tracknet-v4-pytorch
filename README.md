@@ -91,7 +91,7 @@ def forward(self, y_pred, y_true):
 
 ## Dataset Format
 
-### Input Structure
+### Input Structure (default — badminton)
 
 ```
 dataset/raw/match1/
@@ -99,12 +99,43 @@ dataset/raw/match1/
 └── video/rally1.mp4
 ```
 
-### Processed Structure
+### Processed Structure (default — badminton)
 
 ```
 dataset/preprocessed/match1/
 ├── inputs/rally1/               # 512×288 RGB frames
 └── heatmaps/rally1/             # Gaussian heatmaps (sigma=3.0)
+```
+
+### yastrebksv/TrackNet Dataset (tennis, `--dataset-type v1`)
+
+Download the dataset from the [Google Drive link](https://drive.google.com/drive/folders/11r0RUaQHX7I3ANkaYG4jOxXK1OYo01Ut)
+provided in the [yastrebksv/TrackNet](https://github.com/yastrebksv/TrackNet) repository and
+place it as follows:
+
+```
+datasets/trackNet/
+├── images/
+│   ├── game1/
+│   │   ├── Clip1/
+│   │   │   ├── 0000.jpg
+│   │   │   └── ...
+│   │   └── Clip13/
+│   └── game10/
+└── gts/
+    ├── game1/
+    │   ├── Clip1/
+    │   │   ├── 0000.jpg
+    │   │   └── ...
+    │   └── Clip13/
+    └── game10/
+```
+
+No preprocessing is required — frames are resized from 1280×720 to 512×288
+and ground-truth images are converted from RGB to grayscale on-the-fly.
+
+```bash
+python train.py --data datasets/trackNet --dataset-type v1 --batch 4 --epochs 30
 ```
 
 ## Training
