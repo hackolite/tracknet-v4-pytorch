@@ -92,7 +92,7 @@ class TrackNetV1CSVDataset(Dataset):
         for game_dir in game_dirs:
             clip_dirs = sorted(d for d in game_dir.iterdir() if d.is_dir())
             for clip_dir in clip_dirs:
-                label_file = clip_dir / "label.csv"
+                label_file = clip_dir / "Label.csv"
                 if not label_file.exists():
                     continue
                 items.extend(self._process_clip(clip_dir, label_file))
