@@ -12,6 +12,7 @@ flatbuffers==25.2.10
 fonttools==4.58.4
 fsspec==2025.5.1
 gast==0.6.0
+gdown==6.1.0
 google-pasta==0.2.0
 grpcio==1.73.0
 h5py==3.14.0

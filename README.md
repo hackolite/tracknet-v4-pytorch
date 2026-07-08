@@ -109,7 +109,14 @@ dataset/preprocessed/match1/
 
 ### yastrebksv/TrackNet Dataset (tennis, `--dataset-type v1`)
 
-Download the dataset from the [Google Drive link](https://drive.google.com/drive/folders/11r0RUaQHX7I3ANkaYG4jOxXK1OYo01Ut)
+Download the dataset automatically with the included script:
+
+```bash
+python download_dataset.py                        # downloads to datasets/trackNet (default)
+python download_dataset.py --output my/path       # custom destination
+```
+
+Or download manually from the [Google Drive link](https://drive.google.com/drive/folders/11r0RUaQHX7I3ANkaYG4jOxXK1OYo01Ut)
 provided in the [yastrebksv/TrackNet](https://github.com/yastrebksv/TrackNet) repository and
 place it as follows:
 
