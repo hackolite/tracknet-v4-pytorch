@@ -7,9 +7,11 @@ python train.py --data dataset/train --batch 8 --epochs 50 --lr 0.001
 python train.py --data dataset/train --optimizer Lion --lr 0.0003 --batch 16
 python train.py --resume best.pth --data dataset/train --lr 0.0001
 python train.py --resume checkpoint.pth --data dataset/train --optimizer Lion --epochs 100
+python train.py --data datasets/trackNet --dataset-type v1 --batch 4 --epochs 30
 
 Parameters:
 --data: Training dataset path (required)
+--dataset-type: Dataset format: v4 (default, badminton) or v1 (yastrebksv/TrackNet tennis)
 --resume: Checkpoint path for resuming
 --split: Train/val split ratio (default: 0.8)
 --seed: Random seed (default: 26)
@@ -44,11 +46,14 @@ from lion_pytorch import Lion
 from model.loss import WeightedBinaryCrossEntropy
 from model.tracknet import TrackNet
 from preprocessing.tracknet_dataset import FrameHeatmapDataset
+from preprocessing.tracknet_v1_dataset import TrackNetV1Dataset
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="TrackNet Training")
     parser.add_argument('--data', type=str, required=True)
+    parser.add_argument('--dataset-type', type=str, default='v4', choices=['v4', 'v1'],
+                        help='Dataset format: v4 (default badminton) or v1 (yastrebksv/TrackNet tennis)')
     parser.add_argument('--resume', type=str)
     parser.add_argument('--split', type=float, default=0.8)
     parser.add_argument('--seed', type=int, default=26)
@@ -125,7 +130,10 @@ class Trainer:
         self.interrupted = True
 
     def setup_data(self):
-        dataset = FrameHeatmapDataset(self.args.data)
+        if self.args.dataset_type == 'v1':
+            dataset = TrackNetV1Dataset(self.args.data)
+        else:
+            dataset = FrameHeatmapDataset(self.args.data)
         torch.manual_seed(self.args.seed)
         train_size = int(self.args.split * len(dataset))
         train_ds, val_ds = random_split(dataset, [train_size, len(dataset) - train_size])
