@@ -70,9 +70,22 @@ class TrackNetV1Dataset(Dataset):
         gts_root = self.root_dir / "gts"
 
         if not images_root.exists():
-            raise FileNotFoundError(f"images/ directory not found under {self.root_dir}")
+            # Fallback: game directories may live directly under root (no images/ wrapper)
+            non_gts_dirs = [d for d in self.root_dir.iterdir() if d.is_dir() and d.name != "gts"]
+            if non_gts_dirs:
+                images_root = self.root_dir
+            else:
+                raise FileNotFoundError(
+                    f"images/ directory not found under {self.root_dir}. "
+                    f"Expected either:\n"
+                    f"  {self.root_dir}/images/game*/Clip*/*.jpg  (with gts/ sibling)\n"
+                    f"  {self.root_dir}/game*/Clip*/*.jpg          (game dirs at root, with gts/ sibling)"
+                )
         if not gts_root.exists():
-            raise FileNotFoundError(f"gts/ directory not found under {self.root_dir}")
+            raise FileNotFoundError(
+                f"gts/ directory not found under {self.root_dir}. "
+                f"Expected: {self.root_dir}/gts/game*/Clip*/*.jpg"
+            )
 
         items = []
         game_dirs = sorted(d for d in images_root.iterdir() if d.is_dir())
